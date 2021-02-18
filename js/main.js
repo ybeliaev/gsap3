@@ -2,6 +2,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 function initNavigation(){
     const mainNavLinks = gsap.utils.toArray(".main-nav a")
+    const mainNavLinksRev = gsap.utils.toArray(".main-nav a").reverse()
     mainNavLinks.forEach(link => {
         link.addEventListener("mouseleave", () => {
             // add class
@@ -18,17 +19,21 @@ function initNavigation(){
         // direction - св-во объекта ScrollTrigger. =1 когда скролл вниз и запуск анимации, = -1 вверх 
         console.log(direction);
         let scrollingDown = direction === 1; // true or false
-        return gsap.to(mainNavLinks, {
-            duration: 1, 
-            stagger: 0.5, 
+        // обратная прокрутка при скролле вверх
+        const links = scrollingDown ? mainNavLinks : mainNavLinksRev
+        return gsap.to(links, {
+            duration: 0.3, 
+            stagger: 0.05, 
             autoAlpha: () => scrollingDown ? 0 : 1 , 
             y: () => scrollingDown ? 20 : 0,
+            ease: "Power4.out"
         })
     }
 
     // code on 138 app.css
     ScrollTrigger.create({ // ScrollTrigger - Animate anything on scroll
         start: 100, //  starting scroll position (numeric, in pixels) from top
+        end: "bottom bottom-=200", //ending scroll position (numeric, in pixels)
         toggleClass: {
             targets: "body", // на body вешается\убирается класс has-scrolled
             className: "has-scrolled"
